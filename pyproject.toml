@@ -1,0 +1,7 @@
+[project]
+name = "NeuroEvolution"
+version = "0.1.0"
+description = "neural network trainer using evolutionary techniques"
+authors = [{name="giyushino", email="allanzhang440@gmail.com" }]
+dependencies = [
+]
