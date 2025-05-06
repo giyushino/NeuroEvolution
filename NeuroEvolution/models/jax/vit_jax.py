@@ -1,3 +1,4 @@
+#conda_env: NeuroEvolution
 #MIT License
 #
 #Copyright (c) 2022 Enrico Shippole
@@ -20,17 +21,12 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-
 import flax.linen as nn
-
 import jax
 import jax.numpy as jnp
 from jax.numpy import einsum
-
 import numpy as np
-
 from typing import Callable
-
 from einops import rearrange, repeat
 
 # helpers
@@ -134,7 +130,7 @@ class Transformer(nn.Module):
 
         return x
 
-class ViT(nn.Module):
+class JaxViT(nn.Module):
     image_size: int
     patch_size: int
     num_classes: int
@@ -194,8 +190,9 @@ if __name__ == '__main__':
     key = jax.random.PRNGKey(0)
 
     img = jax.random.normal(key, (1, 256, 256, 3))
-
-    v = ViT(
+    
+    print("Initializing model")
+    v = JaxViT(
         image_size = 256,
         patch_size = 32,
         num_classes = 1000,
@@ -210,12 +207,12 @@ if __name__ == '__main__':
     init_rngs = {'params': jax.random.PRNGKey(1), 
                 'dropout': jax.random.PRNGKey(2), 
                 'emb_dropout': jax.random.PRNGKey(3)}
-
+    
     params = v.init(init_rngs, img)
     output = v.apply(params, img, rngs=init_rngs)
     print(output.shape)
-
+    
     n_params_flax = sum(
-        jax.tree_leaves(jax.tree_map(lambda x: np.prod(x.shape), params))
+        jax.tree.leaves(jax.tree.map(lambda x: np.prod(x.shape), params))
     )
     print(f"Number of parameters in Flax model: {n_params_flax}")

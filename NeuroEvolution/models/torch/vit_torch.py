@@ -102,7 +102,7 @@ class Transformer(nn.Module):
 
         return self.norm(x)
 
-class ViT(nn.Module):
+class TorchViT(nn.Module):
     def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, pool = 'cls', channels = 3, dim_head = 64, dropout = 0., emb_dropout = 0.):
         super().__init__()
         image_height, image_width = pair(image_size)
@@ -150,7 +150,7 @@ class ViT(nn.Module):
 
 
 if __name__ == "__main__":
-    v = ViT(
+    v = TorchViT(
         image_size = 256,
         patch_size = 32,
         num_classes = 1000,
@@ -161,5 +161,8 @@ if __name__ == "__main__":
         dropout = 0.1,
         emb_dropout = 0.1
     )
+
     img = torch.randn(1, 3, 256, 256)
     preds = v(img)
+    total_params = sum(p.numel() for p in v.parameters())
+    print(total_params)

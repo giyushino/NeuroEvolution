@@ -2,7 +2,7 @@ from datasets import load_dataset
 import numpy as np
 import json 
 
-def create_cifar():
+def load_cifar():
     return 0
 
 
