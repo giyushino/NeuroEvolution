@@ -3,9 +3,10 @@ Testing how effective "natural selection" is in producing accurate neural networ
 
 
 ## To Do 
-- [x] Write CNN, ViT -> (pytorch + jax for both)
-    - Putting jax off for now, seems like a pain
-- [ ] Set up 2 datasets -> Google Doodle + real images 
+- [x] Write CNN, ViT (pytorch + jax for both)
+    - Putting jax off for now, not exactly sure how to speed up model initialization, which is necessary for evolutionary stuff 
+- [ ] Set up 2 datasets 
+    - Google Doodle + real images 
 - [ ] Set up normal training pipeline 
 - [ ] Train all 4 models 
 - [ ] Create function to compare weights (cosine similarity) 

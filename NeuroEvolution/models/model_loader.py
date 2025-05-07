@@ -51,7 +51,6 @@ def openai_clip():
 
 
 if __name__ == "__main__":
-    temp = 0
     vit_config = {
         "image_size": 28,
         "patch_size": 7,
@@ -64,9 +63,8 @@ if __name__ == "__main__":
         "emb_dropout": 0.1,
         "channels": 1 
     }
-
-    
         
+
     # example for Jax ViT 
     """
     model, params = jax_vit_init(16, vit_config) 
