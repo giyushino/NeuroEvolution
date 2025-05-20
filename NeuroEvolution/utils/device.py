@@ -1,5 +1,4 @@
 #conda_env: NeuroEvolution
-
 import jax 
 import torch 
 

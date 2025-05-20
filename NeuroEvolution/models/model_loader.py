@@ -48,6 +48,14 @@ def openai_clip():
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
     return model, processor 
 
+def linear_classifier_model(image_size, num_classes):
+    linear_classifier = torch.nn.Sequential( 
+        torch.nn.Linear(in_features = image_size**2, out_features =num_classes), 
+        torch.nn.Softmax(dim=1) 
+    )   
+    return linear_classifier
+
+
 
 
 if __name__ == "__main__":
