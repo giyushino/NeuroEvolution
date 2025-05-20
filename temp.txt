@@ -1,1 +1,0 @@
-installation is tricky, remember to upgrade cudnn even if torch mismatch after installaing jax
