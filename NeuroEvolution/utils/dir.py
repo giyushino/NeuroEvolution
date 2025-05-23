@@ -1,1 +1,1 @@
-BASE = "/home/allan/nvim/projects"
+BASE = "/home/allan/nvim/projects/"

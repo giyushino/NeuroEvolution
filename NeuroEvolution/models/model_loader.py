@@ -44,6 +44,7 @@ def torch_vit_init(config):
     return TorchViT(**config) 
 
 def openai_clip():
+    # reinit model 
     model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
     return model, processor 
@@ -71,9 +72,14 @@ if __name__ == "__main__":
         "emb_dropout": 0.1,
         "channels": 1 
     }
-        
+    
+    # quantize
+    model_int8 = torch.ao.quantization.quantize_dynamic(
+        model_fp32,  # the original model
+        {torch.nn.Linear},  # a set of layers to dynamically quantize
+        dtype=torch.qint8)  # the target dtype for quantized weights
 
-    # example for Jax ViT 
+
     """
     model, params = jax_vit_init(16, vit_config) 
     init_rngs = {'params': jax.random.PRNGKey(1), 

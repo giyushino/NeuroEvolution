@@ -11,7 +11,7 @@ class TorchCNN(nn.Module):
     self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3)
     self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
     
-    self.fc1 = nn.Linear(64 * 14 * 14, 128)
+    self.fc1 = nn.Linear(64 * 12 * 12, 128) # 14 for size 32 x 32 images
     self.dropout = nn.Dropout(p=0.5)
     self.fc2 = nn.Linear(128, num_classes)
 
@@ -28,7 +28,7 @@ class TorchCNN(nn.Module):
 
 if __name__ == "__main__":
     cnn = TorchCNN(2, 1)
-    img = torch.rand(16, 1,  32, 32)
+    img = torch.rand(16, 1,  28, 28)
     output = cnn(img)
     print(output)
 

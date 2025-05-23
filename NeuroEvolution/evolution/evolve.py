@@ -3,8 +3,12 @@ from datasets import load_dataset
 import torch
 
 from NeuroEvolution.models.model_loader import *
+from NeuroEvolution.utils.timed import timed
+from NeuroEvolution.utils.device import DEVICE
 
-def generation(size, model, config):
+# look into torch.cuda.Stream()
+
+def generation(size, model, config, quantize = False):
     """
     Creates population with size # of models 
     
@@ -17,6 +21,8 @@ def generation(size, model, config):
     """
     models = []
     failed = True  
+    # the ViT loader unpacks the config in the function, 
+    # not sure if I want to change that 
     try: 
         model(*config)
         failed = False 
@@ -24,10 +30,24 @@ def generation(size, model, config):
         pass
     if failed is True: 
         for i in range(size):
-            models.append(model(config))
+            if quantize is True: 
+                model_int8 = torch.ao.quantization.quantize_dynamic(
+                    model(config),  
+                    {torch.nn.Linear},  
+                    dtype=torch.qint8)  
+                models.append(model_int8)
+            else:
+                models.append(model(config).to(DEVICE))
     else:
         for i in range(size):
-            models.append(model(*config))
+            if quantize is True: 
+                model_int8 = torch.ao.quantization.quantize_dynamic(
+                    model(*config),  
+                    {torch.nn.Linear},  
+                    dtype=torch.qint8)  
+                models.append(model_int8)
+            else:
+                models.append(model(*config).to(DEVICE))
     return models 
 
 
@@ -45,7 +65,8 @@ if __name__ == "__main__":
         "emb_dropout": 0.1,
         "channels": 1 
     }
-    population = generation(10, model, vit_config)
-    print(population)
+    timed_generation = timed(generation)
+    population = timed_generation(100, model, vit_config, True)
+    #print(population)
 
 
