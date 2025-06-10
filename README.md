@@ -9,6 +9,8 @@ Testing how effective "natural selection" is in producing accurate neural networ
     - Google Doodle + real images -> i'll do real later
 - [x] Test if parsing the raw jsonl is faster than datasets (i think it probably is)
     - Doesn't matter I think, both are fast enough 
+- [ ] Rank the classes by how similar they are and see if we can get the ordering correct, ie dragon and crocodile should be similar to each other 
+    - Maybe save embeddings 
 - [ ] Set up normal training pipeline 
 - [ ] Train all 4 models 
 - [ ] Create function to compare weights (cosine similarity) 
@@ -22,3 +24,4 @@ Testing how effective "natural selection" is in producing accurate neural networ
 - [ ] Plot loss landscape
 - [ ] Front end maybe? 
 - [ ] Animations? 
+

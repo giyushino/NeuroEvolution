@@ -72,15 +72,21 @@ if __name__ == "__main__":
         "emb_dropout": 0.1,
         "channels": 1 
     }
-    
+
+    model = linear_classifier_model(28, 2)
+    example = torch.rand(10, 784)
+    output = model(example)
+    print(output)
+    """ 
+    model_fp32 = torch_cnn_init(5, 2)
+    print(model_fp32)
     # quantize
     model_int8 = torch.ao.quantization.quantize_dynamic(
         model_fp32,  # the original model
-        {torch.nn.Linear},  # a set of layers to dynamically quantize
+        {torch.nn.Linear, torch.nn.Conv2d, torch.nn.MaxPool2d, 
+         torch.nn.functional.relu},  # a set of layers to dynamically quantize
         dtype=torch.qint8)  # the target dtype for quantized weights
-
-
-    """
+    print(model_int8)
     model, params = jax_vit_init(16, vit_config) 
     init_rngs = {'params': jax.random.PRNGKey(1), 
                 'dropout': jax.random.PRNGKey(2), 

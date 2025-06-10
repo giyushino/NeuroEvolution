@@ -125,6 +125,11 @@ def torch_model_summary(model, print_weights = False):
     total_params = sum(p.numel() for p in model.parameters())
     print(f"Number of parameters in PyTorch model: {total_params}")
 
+
+def similarity(model_1, model_2):
+    return 0
+
+
 if __name__ == "__main__":
     t0 = time.time()
     model_1 = linear_classifier_model(28, 5)

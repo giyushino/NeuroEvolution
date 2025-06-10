@@ -67,17 +67,13 @@ def run_inference_benchmarks(model, dataset, batch_sizes):
     print(f"{DEVICE} \n" + border_line)
     print(f"| {'Batch Size':^{batch_col_width}} | {'Time (s)':^{time_col_width}} | {'Per Image (s)':^{per_image_col_width}} |")
     print(border_line)
-
-    with torch.no_grad(): # Disable gradient calculations for faster inference
+ 
+    # Disabling grad speeds up inference? need to test to see by how much
+    with torch.no_grad(): 
         for batch_size in batch_sizes:
-            max_start_index = len(dataset["train"]) - batch_size
-            if max_start_index < 0: # Handle cases where dataset is smaller than batch_size
-                start_index = 0
-            else:
-                start_index = pyrandom.randint(0, max_start_index)
-
+            start_index = pyrandom.randint(0, len(dataset["train"]) - batch_size)
             batch_torch, _ = batch(batch_size, start_index, dataset)
-
+            
             # Move batch to device *before* passing to model for timing
             batch_torch = batch_torch.to(DEVICE)
 

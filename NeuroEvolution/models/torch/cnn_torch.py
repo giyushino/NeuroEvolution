@@ -5,7 +5,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class TorchCNN(nn.Module):
-  def __init__(self, num_classes, num_channels):
+  def __init__(self, num_classes, num_channels, name = None, parent1 = None, parent2 = None):
+    self.name = name
+    self.parent1 = parent1
+    self.parent2 = parent2
     super(TorchCNN, self).__init__()
     self.conv1 = nn.Conv2d(in_channels=num_channels, out_channels=32, kernel_size=3)
     self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3)
@@ -28,9 +31,10 @@ class TorchCNN(nn.Module):
 
 if __name__ == "__main__":
     cnn = TorchCNN(2, 1)
-    img = torch.rand(16, 1,  28, 28)
-    output = cnn(img)
-    print(output)
+    print(cnn.name)
+    #img = torch.rand(16, 1,  28, 28)
+#    output = cnn(img)
+#    print(output)
 
     """
     if x.shape[1] == 32 and x.shape[-1] == 3:
