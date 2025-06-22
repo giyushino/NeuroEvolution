@@ -9,6 +9,7 @@ from flax.traverse_util import flatten_dict
 from NeuroEvolution.models.jax.cnn_jax import * 
 from NeuroEvolution.models.torch import vit_torch
 from NeuroEvolution.models.torch.cnn_torch import * 
+from NeuroEvolution.utils.device import DEVICE
 from NeuroEvolution.models.model_loader import *
 
 def randomize(tensor, strength: float):
@@ -25,7 +26,7 @@ def randomize(tensor, strength: float):
     min_val = 1 - strength 
     max_val = 1 + strength 
     rand_tensor =min_val + (max_val -min_val) * torch.rand(tensor.shape)
-    return tensor * rand_tensor
+    return tensor.to(DEVICE) * rand_tensor.to(DEVICE)
 
 def modify(model, specific_layers, random_strength: float): 
     """

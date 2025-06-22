@@ -2,8 +2,9 @@
 import gc
 import torch
 import numpy as np
-import random as pyrandom # there's an overlab with the jax.random for some reason so have to rename
+import random as pyrandom # there's an overlap with the jax.random for some reason so have to rename
 from datasets import load_dataset
+import matplotlib.pyplot as plt
 
 from NeuroEvolution.utils.timed import timed
 from NeuroEvolution.utils.params import merge
@@ -12,131 +13,145 @@ from NeuroEvolution.models.model_loader import *
 from NeuroEvolution.eval.inference import accuracy, batch
 from NeuroEvolution.datasets.load import load_doodle, load_doodle_two_classes
 
-# look into torch.cuda.Stream()
-def generation(size, model, config, models = None):
-    """
-    Creates population with size # of models 
-    
-    Args: 
-        size (int): Number of members in generation 
-        model (torch.nn.module): Model
+class Evolve:
+    def __init__(self, model, dataset, config, population_size, 
+                 generations, threshold, batch_size, random_strength):
+        self.model = model
+        self.dataset = dataset
+        self.config = config
+        self.size = population_size
+        self.models = {}
+        self.generations = generations
+        self.threshold = threshold
+        self.batch_size = batch_size
+        self.random_strength = random_strength
+        self.current_generation = 0
+        self.count = 0
 
-    Return: 
-        population (list): List containing the models
-    """
-    models = {}
-    failed = True  
-    # the ViT loader unpacks the config in the function, 
-    # not sure if I want to change that 
-    try: 
-        model(*config)
-        failed = False 
-    except: 
-        pass
-    if failed is True: 
-        for i in range(size):
-            models[model(config).to(DEVICE)] = None
-    else:
-        for i in range(size):
-            models[model(*config).to(DEVICE)] = None
-    return models 
 
-# parallelize using torch.stream()?
-# eventually start counting which images we have seen
-# try hvaing the threshold being gen size 
-def culling(models, dataset, batch_size, threshold = 0.5):
-    start_index = pyrandom.randint(0, len(dataset["train"]) - batch_size - 1)
-    #img_batch, truth_batch = batch(batch_size, start_index, dataset, animals={"lion": 0, "sheep": 1}) 
-    img_batch, truth_batch = batch(batch_size, start_index, dataset) 
-    count = 0
-    
-    for model in models:
-        count +=1 
-        models[model] = accuracy(model.to(DEVICE), img_batch.to(DEVICE), truth_batch.to(DEVICE))
+    def create_model(self):
+        self.config["name"] = f"Generation{self.current_generation}_Model{self.count}"
+        return self.model(**self.config).to(DEVICE)
 
-    sorted_dict = dict(
-        sorted(
-            ((k, v) for k, v in models.items() if v >= threshold),
-            key=lambda item: item[1],
-            reverse=True
-        )
-    ) 
 
-    for model in models.items():
-        if model not in sorted_dict: 
-            del model 
-    gc.collect()
-    torch.cuda.empty_cache()
-    #print(len(sorted_dict))
-    return models
-
-def new_generation(generation_size, models, config):
-    failed = True
-    try: 
-        model(*config)
-        failed = False 
-    except: 
-        pass
-  
-     
-    if failed is True: 
-        for i in range(generation_size - len(models)):
-            s = np.random.exponential(scale=15, size=100)
-            s = s[s <= 100]   
-            parent1_num = pyrandom.choice(s); parent2_num = 0 
-            while parent2_num == parent1_num:
-                parent2_num = pyrandom.choice(s)
-            child = 
-            models[model(config).to(DEVICE)] = None
-    else:
-        for i in range(generation_size - len(models)):
-            temp_model = model(*config).to(DEVICE)
-            models[model(*config).to(DEVICE)] = None
-            
-
-def logging(save_path):
-    with open(save_path, "a"):
-        pass
-
-def evolve(generation_size, dataset, num_generations):
-    for i in range(num_generations):
+    def generation(self):
+        """
+        Creates population with size # of models 
         
-        pass
-    
-if __name__ == "__main__":
-    # might be fun to do lineage modeling
-    #timed_generation = timed(generation)
-    #population = timed_generation(100, torch_cnn_init, (5, 1))
-    #print(population)
-    #dataset = load_doodle_two_classes().shuffle()
+        Args: 
+            size (int): Number of members in generation 
+            model (torch.nn.module): Model
 
-    dataset = load_doodle().shuffle()
-    print("loaded dataset")
-    population = generation(10, torch_cnn_init, (5, 1))
-    print("created population")
-    culling(population, dataset, 10, 0.15)
-    
+        Return: 
+            population (list): List containing the models
+        """
+        self.count = 0
 
-    """
-    if failed is True: 
-            for i in range(size):
-                if quantize is True: 
-                    model_int8 = torch.ao.quantization.quantize_dynamic(
-                        model(config),  
-                        {torch.nn.Linear},  
-                        dtype=torch.qint8)  
-                    models.append(model_int8)
-                else:
-                    models.append(model(config).to(DEVICE))
-        else:
-            for i in range(size):
-                if quantize is True: 
-                    model_int8 = torch.ao.quantization.quantize_dynamic(
-                        model(*config),  
-                        {torch.nn.Linear},  
-                        dtype=torch.qint8)  
-                    models.append(model_int8)
-                else:
-                    models.append(model(*config).to(DEVICE))
-        return models 
-    """
+        for i in range(self.size - len(self.models)):
+            self.count += 1
+            self.config["name"] = f"Generation{self.current_generation}_Model{self.count}"
+            self.models[self.create_model()] = None
+
+        return self.models
+
+
+    def culling(self, threshold=None):
+        print(f"{len(self.models)} present")
+        if threshold is not None:
+            # overide threshold to allow for dynamic selection
+            self.threshold = threshold
+        
+        # testing 
+        self.threshold += 0.005
+
+        start_index = pyrandom.randint(0, len(self.dataset["train"]) - self.batch_size - 1)
+        img_batch, truth_batch = batch(self.batch_size, start_index, self.dataset, animals={"lion": 0, "sheep": 1}) 
+        #img_batch, truth_batch = batch(self.batch_size, start_index, self.dataset) 
+    
+        count = 0
+        for model in self.models:
+            count +=1 
+            # set show = True for debugging
+            percent_right = accuracy(model.to(DEVICE), img_batch.to(DEVICE), truth_batch.to(DEVICE))
+            self.models[model] = accuracy(model.to(DEVICE), img_batch.to(DEVICE), truth_batch.to(DEVICE))
+
+        self.models = {k: v for k, v in self.models.items() if v >= self.threshold}
+        self.models = dict(sorted(self.models.items(), key=lambda item: item[1], reverse=True))
+
+        gc.collect()
+        torch.cuda.empty_cache()
+        print(f"{len(self.models)} survived")
+        return self.models
+
+
+    def see_accuracy(self, max_display=10):
+        """
+        Prints model accuracies in a formatted box
+        """
+        lines = []
+        count = 0
+        accuracy = 0
+        if len(self.models) == 0: 
+            return 
+        for model in self.models:
+            acc = self.models[model]
+            accuracy += acc
+            if count <= max_display: 
+                lines.append(f"|| {model.name:<20} || Accuracy: {acc:.4f} ||")
+                count += 1
+
+        width = max(len(line) for line in lines)
+        border = "+" + "-" * (width - 2) + "+"
+        
+        print(f"GENERATION {self.current_generation} || AVERAGE ACC: {accuracy / len(self.models)} || CURRENT THRESHOLD: {self.threshold}")
+        print(border)
+        for line in lines:
+            print(line.ljust(width))
+        print(border)
+
+
+    def skewed_left_choice(self, n, power=1.5):
+        x = np.arange(1, n+1)
+        probs = 1 / x**power
+        probs /= probs.sum()
+        return np.random.choice(x, p=probs)
+
+
+    def procreate(self, scale=20, size=200):
+        possible_parents = list(range(1, len(self.models)))
+        parent_1_num = self.skewed_left_choice(len(possible_parents)); parent_2_num = 1
+
+        while parent_1_num == parent_2_num:
+            parent_2_num = self.skewed_left_choice(len(possible_parents))
+
+        child = self.create_model() 
+        parent_1, parent_2 = list(self.models.keys())[parent_1_num], list(self.models)[parent_2_num]
+        self.config["name"] = f"Generation{self.current_generation}_Model{self.count}"
+        self.config["parent_1"] = parent_1.name; self.config["parent_2"] = parent_2.name
+        return merge(parent_1, parent_2, child, None, True, self.random_strength)
+
+
+    def new_generation(self):
+        self.current_generation += 1
+        if len(self.models) == 0 or self.current_generation == self.generations: 
+            return 
+        
+        for i in range(self.size - len(self.models)):
+            self.count += 1 
+            child = self.procreate()
+            self.models[child] = None
+                
+        return self.models
+
+
+args = {
+    "num_classes" : 2, 
+    "num_channels" : 1, 
+}
+
+brah = Evolve(torch_cnn_init, load_doodle_two_classes().shuffle(), args, population_size=100, generations=10000, threshold = 0.5, batch_size=64, random_strength = 0.8)
+brah.generation()
+for i in range(100):
+    brah.culling()
+    brah.see_accuracy()
+    brah.new_generation()

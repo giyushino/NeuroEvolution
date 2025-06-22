@@ -35,7 +35,6 @@ def batch(batch_size, start_index, dataset, animals={"crocodile": 0, "dragon": 1
     return tensor.float(), torch.tensor(truth)
 
 def accuracy(model, batch, ground_truth, show = False): 
-    correct = 0 
     output = model(batch)
     predictions = torch.argmax(output, dim = 1)
     if show is True: 
@@ -43,6 +42,7 @@ def accuracy(model, batch, ground_truth, show = False):
         print(f"Ground Truth: {ground_truth}")
     correct_predictions = (predictions == ground_truth)
     accuracy = correct_predictions.float().mean() 
+    #print(f"Accuracy: {accuracy}")
     return accuracy.item()
 
 

@@ -12,7 +12,7 @@ def view_doodle(dataset, dataset_type, image_index):
     """
     View an image from dataset
     """
-    raw_data = dataset[dataset_type][image_index]["image"]
+    raw_data = dataset[dataset_type][image_index]["img"]
     torch_tensor = torch.tensor(raw_data) * 255
     image = np.array(torch_tensor, dtype=np.uint8)
     name = dataset[dataset_type][image_index]["label"]
@@ -38,5 +38,5 @@ def view_cifar(dataset_type, image_index):
     return 0
 
 if __name__ == "__main__":
-    view_cifar("train", 0)
+    #view_cifar("train", 0)
     view_doodle(load_doodle(), "train", 0)

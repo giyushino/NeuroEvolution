@@ -37,8 +37,8 @@ def jax_vit_init(batch_size, config):
     params = model.init(init_rngs, img)
     return model, params
 
-def torch_cnn_init(num_classes, num_channels):
-    return TorchCNN(num_classes = num_classes, num_channels = num_channels)
+def torch_cnn_init(num_classes, num_channels, name = None, parent_1 = None, parent_2 = None):
+    return TorchCNN(num_classes = num_classes, num_channels = num_channels, name = name, parent_1 = parent_1, parent_2 = parent_2)
 
 def torch_vit_init(config):
     return TorchViT(**config) 

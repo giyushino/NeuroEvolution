@@ -103,8 +103,9 @@ class Transformer(nn.Module):
         return self.norm(x)
 
 class TorchViT(nn.Module):
-    def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, pool = 'cls', channels = 3, dim_head = 64, dropout = 0., emb_dropout = 0.):
+    def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, pool = 'cls', channels = 3, dim_head = 64, dropout = 0., emb_dropout = 0., name = None):
         super().__init__()
+        self.name = name
         image_height, image_width = pair(image_size)
         patch_height, patch_width = pair(patch_size)
 
@@ -150,6 +151,7 @@ class TorchViT(nn.Module):
 
 
 if __name__ == "__main__":
+    """
     v = TorchViT(
         image_size = 256,
         patch_size = 32,
@@ -161,8 +163,23 @@ if __name__ == "__main__":
         dropout = 0.1,
         emb_dropout = 0.1
     )
-
+    """
+    args = {
+        "image_size" : 256,
+        "patch_size" : 32,
+        "num_classes" : 1000,
+        "dim" : 1024,
+        "depth" : 6,
+        "heads" : 16,
+        "mlp_dim" : 2048,
+        "dropout" : 0.1,
+        "emb_dropout" : 0.1
+    }
+    v = TorchViT(**args)
     img = torch.randn(1, 3, 256, 256)
     preds = v(img)
-    total_params = sum(p.numel() for p in v.parameters())
-    print(total_params)
+    print(preds)
+    """ 
+    #total_params = sum(p.numel() for p in v.parameters())
+    #print(total_params)
+    """
