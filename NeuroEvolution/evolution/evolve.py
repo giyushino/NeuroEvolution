@@ -91,6 +91,7 @@ class Evolve:
         lines = []
         count = 0
         accuracy = 0
+
         if len(self.models) == 0: 
             return 
         for model in self.models:
@@ -144,14 +145,24 @@ class Evolve:
         return self.models
 
 
+"""
 args = {
     "num_classes" : 2, 
     "num_channels" : 1, 
 }
+"""
 
-brah = Evolve(torch_cnn_init, load_doodle_two_classes().shuffle(), args, population_size=100, generations=10000, threshold = 0.5, batch_size=64, random_strength = 0.8)
+
+#brah = Evolve(torch_cnn_init, load_doodle_two_classes().shuffle(), args, population_size=100, generations=10000, threshold = 0.5, batch_size=64, random_strength = 0.8)
+args = {
+    "image_size": 28,
+    "num_classes": 5
+}
+brah = Evolve(linear_classifier_model, load_doodle_two_classes().shuffle(), args, population_size=100, generations=10000, threshold = 0.5, batch_size=64, random_strength = 0.8)
 brah.generation()
 for i in range(100):
     brah.culling()
     brah.see_accuracy()
     brah.new_generation()
+
+

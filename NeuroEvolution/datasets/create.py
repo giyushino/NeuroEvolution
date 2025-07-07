@@ -8,7 +8,7 @@ import os
 
 from NeuroEvolution.utils.dir import BASE
 
-
+ANIMALS = {"sheep": 0, "lion": 1, "duck": 3, "dragon": 4, "crocodile": 5}
 def create_doodle(raw_data_path = "NeuroEvolution/data/raw_data/", save_path = "NeuroEvolution/data/datasets/doodle.jsonl", num_img = 70_000):
     """
     Replicating MNIST -> 60k training images, 10k test set
@@ -23,11 +23,11 @@ def create_doodle(raw_data_path = "NeuroEvolution/data/raw_data/", save_path = "
         None
     """
 
+    # maybe safer to use os.join
     raw_data_path = BASE + raw_data_path 
     classes = 0
     for file in os.listdir(raw_data_path):
         classes += 1
-
     img_per_class = num_img // classes
     with open(BASE + save_path, "w") as json_file:
         for file in os.listdir(raw_data_path):
@@ -37,7 +37,7 @@ def create_doodle(raw_data_path = "NeuroEvolution/data/raw_data/", save_path = "
             for i in range(img_per_class):
                 image_data = class_data[i].reshape(28, 28)/ 255 
                 data = {
-                        "label": class_name,
+                        "label": ANIMALS[class_name],
                         "img": image_data.tolist() 
                         }
                 json.dump(data, json_file)
@@ -59,8 +59,7 @@ def create_doodle_2classes(raw_data_path = "NeuroEvolution/data/raw_data/", save
 
     raw_data_path = BASE + raw_data_path 
     classes = 2
-    for file in os.listdir(raw_data_path):
-        classes += 1
+
 
     img_per_class = num_img // classes
     with open(BASE + save_path, "w") as json_file:
@@ -72,13 +71,14 @@ def create_doodle_2classes(raw_data_path = "NeuroEvolution/data/raw_data/", save
                 for i in range(img_per_class):
                     image_data = class_data[i].reshape(28, 28)/ 255 
                     data = {
-                            "label": class_name,
+                            "label": ANIMALS[class_name],
                             "img": image_data.tolist() 
                             }
                     json.dump(data, json_file)
                     json_file.write("\n")
 
 if __name__ == "__main__":
+    #create_doodle()
     create_doodle_2classes()
     
 

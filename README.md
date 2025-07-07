@@ -11,13 +11,16 @@ Testing how effective "natural selection" is in producing accurate neural networ
     - Doesn't matter I think, both are fast enough 
 - [ ] Rank the classes by how similar they are and see if we can get the ordering correct, ie dragon and crocodile should be similar to each other 
     - Maybe save embeddings 
-- [ ] Set up normal training pipeline 
+- [x] Set up normal training pipeline 
+    - know it works for cnn and linear, idk about vit yet
 - [ ] Train all 4 models 
-- [ ] Create function to compare weights (cosine similarity) 
-- [ ] Write evolutionary algorithm
+- [x] Create function to compare weights (cosine similarity) 
+- [x] Write evolutionary algorithm
+    - for some reason converging super slowly, write it again
 - [ ] Test model robustness (add noise)
 - [ ] Create dataset with predators, see if model learns to differentiate between different animals 
     - Like if we know ducks don't hurt us but crocodiles + lions will, is there any point to learning the difference between croc/lion
+    - study the embeddings ig
 - [ ] See what features are the most important 
     - Grad Cam, see if this allows us to determine what layers mutations should affect the most  
     - hooks, check out some other mechanistic interpretability techniques 

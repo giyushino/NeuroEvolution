@@ -1,10 +1,13 @@
 #conda_env: NeuroEvolution
 
-import matplotlib.pyplot as plt
-from PIL import Image
-import numpy as np
-import random
 import torch
+import random 
+import numpy as np
+import matplotlib.pyplot as plt
+
+from PIL import Image
+from NeuroEvolution.datasets.load import *
+
 
 from NeuroEvolution.datasets.load import load_cifar, load_doodle
 
@@ -39,4 +42,9 @@ def view_cifar(dataset_type, image_index):
 
 if __name__ == "__main__":
     #view_cifar("train", 0)
-    view_doodle(load_doodle(), "train", 0)
+    #view_doodle(load_doodle(), "train", 20000)
+    test = load_cifar()
+    print(test["train"][0]["label"])
+    """
+    label and img
+    """

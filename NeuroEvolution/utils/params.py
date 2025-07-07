@@ -6,11 +6,9 @@ import numpy as np
 from flax.core import unfreeze
 from flax.traverse_util import flatten_dict
 
-from NeuroEvolution.models.jax.cnn_jax import * 
 from NeuroEvolution.models.torch import vit_torch
-from NeuroEvolution.models.torch.cnn_torch import * 
 from NeuroEvolution.utils.device import DEVICE
-from NeuroEvolution.models.model_loader import *
+from NeuroEvolution.models.model_loader import linear_classifier_model, torch_cnn_init
 
 def randomize(tensor, strength: float):
     """
@@ -128,16 +126,32 @@ def torch_model_summary(model, print_weights = False):
 
 
 def similarity(model_1, model_2):
-    return 0
+    count = 0
+    layers = 0
+    for name, param in model_1.named_parameters():
+        layers += 1
+        count += torch.cosine_similarity(model_1.state_dict()[name].detach().flatten(), model_2.state_dict()[name].detach().flatten(), 0, 1e-6)
+    print(count / layers)
+    return count / layers
 
 
 if __name__ == "__main__":
     t0 = time.time()
-    model_1 = linear_classifier_model(28, 5)
-    model_2 = linear_classifier_model(28, 5)
-    model_3 = linear_classifier_model(28, 5)
-    child = merge(model_1, model_2, model_3, None, True, 0.3) 
-    torch_model_summary(child, True)
+    #def __init__(self, image_size, num_classes):
+    config = {
+        "image_size": 28, 
+        "num_classes": 5
+             }
+    model_1 = linear_classifier_model(config)
+    model_2 = linear_classifier_model(config)
+    model_3 = linear_classifier_model(config)
+    model_2.load_state_dict(model_1.state_dict())  
+    model_1 = modify(model_1, None, 0.9)
+    #child = merge(model_1, model_2, model_3, None, True, 0.3) 
+    #torch_model_summary(child, True)
+    model_1.to("cpu")
+    model_2.to("cpu")
+    similarity(model_1, model_2)
     t1 = time.time()
     print(t1 - t0)
      

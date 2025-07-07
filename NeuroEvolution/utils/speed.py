@@ -1,12 +1,14 @@
 #conda_env: NeuroEvolution
 import sys
 import time
+import torch
 import random as pyrandom 
 
-from NeuroEvolution.models.model_loader import *
 from NeuroEvolution.utils import device
 from NeuroEvolution.utils.device import DEVICE
-from NeuroEvolution.eval.inference import *
+from NeuroEvolution.datasets.load import load_doodle
+from NeuroEvolution.eval.inference import accuracy, batch
+from NeuroEvolution.models.model_loader import torch_cnn, torch_linear_classifier
 
 def generation_speed(size, model, config):
     """
@@ -91,7 +93,12 @@ def run_inference_benchmarks(model, dataset, batch_sizes):
 if __name__ == "__main__":
     #generation_speed(100, linear_classifier_model, (28, 5))
     dataset = load_doodle().shuffle() 
-    model = torch_cnn_init(5, 1)
+    #model = torch_cnn(5, 1)
+    config = {
+        "image_size": 28, 
+        "num_classes": 5
+             }
+    model = torch_linear_classifier(config)
     batches = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
     run_inference_benchmarks(model, dataset, batches) 
 
