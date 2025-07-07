@@ -2,20 +2,14 @@
 Testing how effective "natural selection" is in producing accurate neural networks 
 
 ## Set Up
-After this, install [the proper version of Pytorch with GPU support for your device.](https://pytorch.org/get-started/locally/)
-I'm using CUDA 12.8
-```sh
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+To install and run this project locally, copy and paste the following into your terminal: 
+```sh 
+git clone https://github.com/giyushino/NeuroEvolution
+cd NeuroEvolution
+chmod +x /scripts/install.sh
+./scripts/install.sh
 ```
-We also need to install the GPU version of Jax 
-```sh
-pip install --upgrade "jax[cuda12]" 
-```
-Then to properly use this repo 
-```sh
-pip install -e .
-```
-
+If you have any trouble, it's likely that you need to install [the proper version of Pytorch with GPU support for your device.](https://pytorch.org/get-started/locally/). I'm using CUDA 12.8.
 
 
 ## To Do 
