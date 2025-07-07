@@ -3,7 +3,7 @@
 import jax
 from numpy import imag
 import torch
-from transformers import CLIPModel, CLIPProcessor
+#from transformers import CLIPModel, CLIPProcessor
 
 from NeuroEvolution.models.jax.cnn_jax import JaxCNN 
 from NeuroEvolution.models.jax.vit_jax import JaxViT 
@@ -47,12 +47,13 @@ def torch_vit(config):
 def torch_linear_classifier(config):
     return TorchLinear(**config)
 
+"""
 def openai_clip():
     # reinit model 
     model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
     return model, processor 
-
+"""
 
 
 

@@ -1,6 +1,11 @@
 # NeuroEvolution
 Testing how effective "natural selection" is in producing accurate neural networks 
 
+After this, install [the proper version of Pytorch with GPU support for your device.](https://pytorch.org/get-started/locally/)
+I'm using CUDA 12.6
+```sh
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+```
 
 ## To Do 
 - [x] Write CNN, ViT (pytorch + jax for both)
