@@ -1,5 +1,4 @@
 #conda_env: NeuroEvolution
-import sys
 import time
 import torch
 import random as pyrandom 

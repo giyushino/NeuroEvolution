@@ -1,7 +1,6 @@
 #conda_env: NeuroEvolution
 
 import jax
-from numpy import imag
 import torch
 #from transformers import CLIPModel, CLIPProcessor
 

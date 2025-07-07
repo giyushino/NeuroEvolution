@@ -36,8 +36,8 @@ def view_cifar(dataset_type, image_index):
     return 0
 
 if __name__ == "__main__":
-    #view_cifar("train", 0)
-    #view_doodle(load_doodle(), "train", 20000)
+    view_cifar("train", 0)
+    view_doodle(load_doodle(), "train", 20000)
     test = load_cifar()
     print(test["train"][0]["label"])
     """

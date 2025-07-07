@@ -158,7 +158,7 @@ args = {
     "image_size": 28,
     "num_classes": 5
 }
-brah = Evolve(linear_classifier_model, load_doodle_two_classes().shuffle(), args, population_size=100, generations=10000, threshold = 0.5, batch_size=64, random_strength = 0.8)
+brah = Evolve(torch_linear_classifier, load_doodle_two_classes().shuffle(), args, population_size=100, generations=10000, threshold = 0.5, batch_size=64, random_strength = 0.8)
 brah.generation()
 for i in range(100):
     brah.culling()
