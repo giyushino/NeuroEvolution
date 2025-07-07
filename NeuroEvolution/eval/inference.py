@@ -2,9 +2,9 @@
 import torch 
 import time
 
+from NeuroEvolution.utils.device import DEVICE
 from NeuroEvolution.datasets.load import load_doodle, load_doodle_two_classes
 from NeuroEvolution.models.model_loader import torch_cnn, torch_linear_classifier, torch_vit
-from NeuroEvolution.utils.device import DEVICE
 
 def batch(batch_size, start_index, dataset, set_type="train", img_size=28, num_channels=1, debug=False):
     """
@@ -34,7 +34,7 @@ def batch(batch_size, start_index, dataset, set_type="train", img_size=28, num_c
     tensor = torch.tensor(images).view(batch_size, num_channels, img_size, img_size)
     if debug: 
         print(tensor.float(), torch.tensor(truth, dtype=torch.long))
-    return tensor.float(), torch.tensor(truth, dtype=torch.long)
+    return tensor.float().to(DEVICE), torch.tensor(truth, dtype=torch.long).to(DEVICE)
 
 def accuracy(model, batch, ground_truth, show = False): 
     output = model(batch)
@@ -49,11 +49,18 @@ def accuracy(model, batch, ground_truth, show = False):
 
 
 if __name__ == "__main__":
-    datset = load_doodle_two_classes(normalize = False).shuffle()
+    datset = load_doodle(normalize = False).shuffle()
+    config = {
+        "image_size": 28,
+        "num_classes": 5,
+    } 
+    model = torch_linear_classifier(config).to(DEVICE)
     for i in range(10):
         import random as pyrandom
-        brah, truth = batch(10, pyrandom.randint(0, 1000), datset)
+        img, truth = batch(10, pyrandom.randint(0, 1000), datset)
+        print(accuracy(model, img, truth))
         print(truth)
+
     """
     vit_config = {
         "image_size": 28,
@@ -68,12 +75,6 @@ if __name__ == "__main__":
         "channels": 1 
     }
     config = {
-        "image_size": 28,
-        "num_classes": 5,
-    } 
-    for i in range(10):
-        model = torch_linear_classifier(config)
-        print(accuracy(model, batch, truth))
     """
 
     """

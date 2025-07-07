@@ -1,14 +1,11 @@
 #conda_env: NeuroEvolution
-
-from io import RawIOBase
-from datasets import load_dataset
-import numpy as np
-import json 
 import os
+import json 
+import numpy as np
 
 from NeuroEvolution.utils.dir import BASE
 
-ANIMALS = {"sheep": 0, "lion": 1, "duck": 3, "dragon": 4, "crocodile": 5}
+ANIMALS = {"sheep": 0, "lion": 1, "duck": 2, "dragon": 3, "crocodile": 4}
 def create_doodle(raw_data_path = "NeuroEvolution/data/raw_data/", save_path = "NeuroEvolution/data/datasets/doodle.jsonl", num_img = 70_000):
     """
     Replicating MNIST -> 60k training images, 10k test set
@@ -78,8 +75,8 @@ def create_doodle_2classes(raw_data_path = "NeuroEvolution/data/raw_data/", save
                     json_file.write("\n")
 
 if __name__ == "__main__":
-    #create_doodle()
-    create_doodle_2classes()
+    create_doodle()
+    #create_doodle_2classes()
     
 
 

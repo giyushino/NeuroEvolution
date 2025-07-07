@@ -5,12 +5,11 @@ from numpy import imag
 import torch
 from transformers import CLIPModel, CLIPProcessor
 
-from NeuroEvolution.models.jax.cnn_jax import * 
-from NeuroEvolution.models.jax.vit_jax import * 
-from NeuroEvolution.models.torch import linear_classifier_torch
-from NeuroEvolution.models.torch.cnn_torch import *
-from NeuroEvolution.models.torch.vit_torch import *
-from NeuroEvolution.models.torch.linear_classifier_torch import *
+from NeuroEvolution.models.jax.cnn_jax import JaxCNN 
+from NeuroEvolution.models.jax.vit_jax import JaxViT 
+from NeuroEvolution.models.torch.cnn_torch import TorchCNN
+from NeuroEvolution.models.torch.vit_torch import TorchViT
+from NeuroEvolution.models.torch.linear_classifier_torch import TorchLinear
 
 def jax_cnn(batch_size, image_size, num_classes, num_channels):
     example_input = jnp.ones((batch_size, 

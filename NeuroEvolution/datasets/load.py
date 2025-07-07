@@ -1,11 +1,11 @@
 #conda_env: NeuroEvolution
 import torch
 
-from json import load
+from json import load # not sure if this is even worth exploring
 from datasets import load_dataset
 from NeuroEvolution.utils.dir import BASE
 
-ANIMALS = {"sheep": 0, "lion": 1, "duck": 3, "dragon": 4, "crocodile": 5}
+ANIMALS = {"sheep": 0, "lion": 1, "duck": 2, "dragon": 3, "crocodile": 4}
 
 def normalize_img(example, mean, std):
         return {"img": (torch.tensor(example["img"], dtype=torch.float32) - mean) / std }
@@ -31,6 +31,9 @@ def load_cifar():
 
 if __name__ == "__main__":
     doodle = load_doodle_two_classes()
+    print(doodle)
+    print(doodle["train"][10000]["label"])
+    doodle = load_doodle()
     print(doodle)
     print(doodle["train"][10000]["label"])
 #    cifar = load_cifar()

@@ -8,7 +8,7 @@ from flax.traverse_util import flatten_dict
 
 from NeuroEvolution.models.torch import vit_torch
 from NeuroEvolution.utils.device import DEVICE
-from NeuroEvolution.models.model_loader import linear_classifier_model, torch_cnn_init
+from NeuroEvolution.models.model_loader import torch_linear_classifier, torch_cnn
 
 def randomize(tensor, strength: float):
     """
@@ -142,9 +142,9 @@ if __name__ == "__main__":
         "image_size": 28, 
         "num_classes": 5
              }
-    model_1 = linear_classifier_model(config)
-    model_2 = linear_classifier_model(config)
-    model_3 = linear_classifier_model(config)
+    model_1 = torch_linear_classifier(config)
+    model_2 = torch_linear_classifier(config)
+    model_3 = torch_linear_classifier(config)
     model_2.load_state_dict(model_1.state_dict())  
     model_1 = modify(model_1, None, 0.9)
     #child = merge(model_1, model_2, model_3, None, True, 0.3) 

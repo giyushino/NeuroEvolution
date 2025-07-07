@@ -1,14 +1,9 @@
 #conda_env: NeuroEvolution
-
 import torch
-import random 
 import numpy as np
 import matplotlib.pyplot as plt
 
 from PIL import Image
-from NeuroEvolution.datasets.load import *
-
-
 from NeuroEvolution.datasets.load import load_cifar, load_doodle
 
 def view_doodle(dataset, dataset_type, image_index):
