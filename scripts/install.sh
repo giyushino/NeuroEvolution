@@ -1,8 +1,8 @@
 #!/bin/bash 
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda create -y -n NeuroEvolutionTest python=3.13
-conda activate NeuroEvolutionTest
+conda create -y -n NeuroEvolution python=3.13
+conda activate NeuroEvolution
 
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
 pip install --upgrade "jax[cuda12]"
